@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>RINTIK - Peta Pengunjung UMKM Kota Bogor</title>
+    <title>RINTIK - WebGIS UMKM & Analisis Usaha Kota Bogor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Leaflet CSS -->
@@ -31,7 +31,6 @@
 
         #map { width: 100%; height: 100%; z-index: 1; }
 
-        /* KONTROL ZOOM DI KIRI BAWAH */
         .leaflet-bottom.leaflet-left { bottom: 25px; left: 20px; }
         .leaflet-control-zoom {
             border: 1px solid var(--border-soft) !important;
@@ -55,10 +54,23 @@
             display: flex; align-items: center; gap: 8px; pointer-events: auto; flex-wrap: wrap;
         }
 
+        /* POV SWITCHER */
+        .pov-mode-switch {
+            display: flex; background: #e2e8f0; padding: 3px; border-radius: 25px; gap: 3px;
+        }
+        .btn-pov-tab {
+            border: none; background: transparent; padding: 6px 14px; border-radius: 20px;
+            font-size: 11.5px; font-weight: 700; color: #475569; cursor: pointer;
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-pov-tab.active {
+            background: #ffffff; color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
         .search-pill-box {
             display: flex; align-items: center; background: var(--bg-card);
             padding: 8px 14px; border-radius: 30px; border: 1px solid var(--border-soft);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06); gap: 10px; width: 280px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); gap: 10px; width: 250px;
         }
         .search-pill-box input {
             border: none; outline: none; background: transparent; width: 100%;
@@ -66,7 +78,6 @@
         }
         .search-pill-box i { color: #94a3b8; font-size: 13px; }
 
-        /* BADGE KATEGORI FILTER */
         .category-pill-group { display: flex; align-items: center; gap: 6px; }
         .cat-pill {
             display: flex; align-items: center; gap: 6px; background: var(--bg-card);
@@ -80,7 +91,6 @@
         }
         .cat-pill.active i { color: #ffffff !important; }
 
-        /* DROPDOWN FILTER */
         .select-pill {
             background: var(--bg-card); border: 1px solid var(--border-soft);
             padding: 7px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
@@ -97,7 +107,7 @@
 
         /* FLOATING SIDEBAR KIRI */
         .left-floating-card {
-            position: absolute; top: 68px; left: 16px; width: 330px; max-height: calc(100vh - 86px);
+            position: absolute; top: 68px; left: 16px; width: 350px; max-height: calc(100vh - 86px);
             background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border-soft);
             box-shadow: 0 10px 30px rgba(0,0,0,0.08); z-index: 1000; display: flex;
             flex-direction: column; overflow: hidden;
@@ -108,7 +118,6 @@
         .left-card-body::-webkit-scrollbar { width: 5px; }
         .left-card-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-        /* LIST ITEM */
         .list-header-title { font-size: 13px; font-weight: 800; color: #991b1b; }
         .list-header-sub { font-size: 10px; color: var(--text-muted); margin-bottom: 6px; }
 
@@ -124,16 +133,6 @@
         .item-price-rating { font-size: 10.5px; font-weight: 600; color: #334155; }
         .item-footer-loc { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-top: 4px; }
 
-        /* HASIL KOSONG */
-        .no-result-box { padding: 12px 6px; text-align: left; }
-        .no-result-title { font-size: 13px; font-weight: 800; color: #b91c1c; margin-bottom: 4px; }
-        .no-result-sub { font-size: 10.5px; color: var(--text-muted); margin-bottom: 12px; }
-        .btn-reset-search {
-            width: 100%; background: #ffffff; border: 1px solid var(--border-soft);
-            padding: 8px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;
-        }
-
-        /* DETAIL VIEW */
         .btn-back-link { font-size: 11px; font-weight: 700; color: #b91c1c; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
         .detail-title-large { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
         .detail-meta-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
@@ -149,7 +148,6 @@
             border-radius: 8px; font-size: 11.5px; font-weight: 700; cursor: pointer; text-align: center;
         }
 
-        /* MODA TRANSPORTASI TABS */
         .transport-tab {
             background: var(--bg-card); border: 1px solid var(--border-soft);
             padding: 6px 12px; border-radius: 18px; font-size: 11px; font-weight: 600;
@@ -182,11 +180,22 @@
         .bottom-layer-panel {
             position: absolute; bottom: 20px; right: 20px; background: var(--bg-card);
             border-radius: 14px; border: 1px solid var(--border-soft); padding: 14px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08); z-index: 999; width: 220px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); z-index: 999; width: 230px;
             display: flex; flex-direction: column; gap: 8px;
         }
         .layer-item-checkbox { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; color: #334155; cursor: pointer; }
         .layer-item-checkbox input { accent-color: #ea580c; width: 15px; height: 15px; cursor: pointer; }
+
+        .score-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 52px; height: 52px; border-radius: 50%; font-size: 18px; font-weight: 800;
+            color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .competitor-list-item {
+            background: #fff; border: 1px solid #fee2e2; border-left: 3px solid #dc2626;
+            border-radius: 6px; padding: 6px 8px; font-size: 11px; margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
@@ -194,13 +203,24 @@
     <!-- TOP FLOATING NAVBAR -->
     <div class="top-navbar-container">
         <div class="top-left-filters">
-            <div class="search-pill-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="mainSearchInput" placeholder="Cari UMKM, kelurahan, kecamatan..." onkeyup="filterSemuaData()">
+            <!-- Mode Switcher -->
+            <div class="pov-mode-switch">
+                <button class="btn-pov-tab active" id="tabModePengunjung" onclick="gantiModePOV('pengunjung')">
+                    <i class="fa-solid fa-compass"></i> Pengunjung
+                </button>
+                <button class="btn-pov-tab" id="tabModePengusaha" onclick="gantiModePOV('pengusaha')">
+                    <i class="fa-solid fa-briefcase"></i> Analisis Peluang Usaha
+                </button>
             </div>
 
-            <!-- Category Pills -->
-            <div class="category-pill-group">
+            <!-- Search box Pengunjung -->
+            <div class="search-pill-box" id="searchBoxContainer">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="mainSearchInput" placeholder="Cari UMKM, produk, kelurahan..." onkeyup="filterSemuaData()">
+            </div>
+
+            <!-- Kategori Pengunjung -->
+            <div class="category-pill-group" id="categoryPillGroup">
                 <div class="cat-pill" onclick="pilihKategori('Fashion', this)"><i class="fa-solid fa-shirt" style="color:#ea580c;"></i> Fashion</div>
                 <div class="cat-pill" onclick="pilihKategori('Kuliner', this)"><i class="fa-solid fa-utensils" style="color:#e11d48;"></i> Kuliner</div>
                 <div class="cat-pill" onclick="pilihKategori('Jasa', this)"><i class="fa-solid fa-scissors" style="color:#0284c7;"></i> Jasa</div>
@@ -209,7 +229,7 @@
             </div>
 
             <!-- Dropdown Kecamatan & Kelurahan -->
-            <select id="kecamatanSelect" class="select-pill" onchange="filterSemuaData()">
+            <select id="kecamatanSelect" class="select-pill" onchange="onKecamatanChange()">
                 <option value="Semua" selected>Semua Kecamatan</option>
                 <option value="Bogor Barat">Bogor Barat</option>
                 <option value="Bogor Selatan">Bogor Selatan</option>
@@ -219,7 +239,7 @@
                 <option value="Tanah Sareal">Tanah Sareal</option>
             </select>
 
-            <select id="kelurahanSelect" class="select-pill" onchange="filterSemuaData()">
+            <select id="kelurahanSelect" class="select-pill" onchange="onKelurahanChange()">
                 <option value="Semua" selected>Semua Kelurahan</option>
             </select>
 
@@ -260,23 +280,20 @@
     <div class="bottom-layer-panel">
         <div style="font-size:12px; font-weight:800; margin-bottom:4px;">Layer peta</div>
         <label class="layer-item-checkbox">
-            <input type="checkbox" id="layerUmkm" checked onchange="toggleMapLayer('umkm')"> UMKM
+            <input type="checkbox" id="layerUmkm" checked onchange="toggleMapLayer('umkm')"> Titik UMKM
         </label>
         <label class="layer-item-checkbox">
-            <input type="checkbox" id="layerAdmin" checked onchange="toggleMapLayer('admin')"> Batas administrasi
+            <input type="checkbox" id="layerAdmin" checked onchange="toggleMapLayer('admin')"> Batas Administrasi Kota
         </label>
         <label class="layer-item-checkbox">
-            <input type="checkbox" id="layerJalan" onchange="toggleMapLayer('jalan')"> Jalan
+            <input type="checkbox" id="layerJalan" onchange="toggleMapLayer('jalan')"> Jaringan Jalan
         </label>
         <label class="layer-item-checkbox">
-            <input type="checkbox" id="layerSekolah" onchange="toggleMapLayer('sekolah')"> Sekolah
+            <input type="checkbox" id="layerSekolah" checked onchange="toggleMapLayer('sekolah')"> Sekolah & Kampus
         </label>
         <label class="layer-item-checkbox">
-            <input type="checkbox" id="layerPermukiman" onchange="toggleMapLayer('permukiman')"> Permukiman
+            <input type="checkbox" id="layerPermukiman" onchange="toggleMapLayer('permukiman')"> Zona Permukiman
         </label>
-        <div style="font-size:9px; color:#94a3b8; line-height:1.3; margin-top:4px;">
-            Layer Jalan, Sekolah, dan Permukiman tampil jika datanya tersedia dan tervalidasi.
-        </div>
     </div>
 
     <div id="map"></div>
@@ -292,26 +309,18 @@
             zoomControl: false
         });
 
-        // Kontrol zoom di kiri bawah
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-        // BASEMAP ESRI WORLD TOPO MAP
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 19,
             attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC'
         }).addTo(map);
 
-        const pusatKecamatan = {
-            "Bogor Tengah": [-6.5950, 106.7950],
-            "Bogor Barat": [-6.5750, 106.7650],
-            "Bogor Selatan": [-6.6350, 106.8150],
-            "Bogor Timur": [-6.6200, 106.8250],
-            "Bogor Utara": [-6.5650, 106.8100],
-            "Tanah Sareal": [-6.5550, 106.7850]
-        };
-
+        // STATE SISTEM
+        let activePOV = 'pengunjung';
         let rawUmkmData = [];
         let filteredUmkmData = [];
+        let rawAdminData = null;
         let activeKategori = 'Semua';
         let userLocation = [-6.5950, 106.7900];
         let userMarker = null;
@@ -320,11 +329,23 @@
         let currentActiveItem = null;
         let activeTransportMode = 'motor';
         let currentRouteDistanceKm = 0;
-        let navigationInterval = null; // ID pelacak posisi real-time in-app
+        let navigationInterval = null;
+
+        // LAYER GROUPS
         let umkmLayerGroup = L.layerGroup().addTo(map);
         let adminBoundaryLayer = null;
+        let highlightBoundaryLayer = L.layerGroup().addTo(map);
+        let jalanLayer = L.layerGroup();
+        let sekolahLayer = L.layerGroup().addTo(map);
+        let permukimanLayer = L.layerGroup();
+        let analisisBufferLayer = null;
+        let candidateMarker = null;
+        let competitorMarkersGroup = L.layerGroup().addTo(map);
 
-        // Custom Pin SVG Marker
+        let sekolahData = [];
+        let jalanData = [];
+        let permukimanData = [];
+
         function createCustomPin(color) {
             return L.divIcon({
                 className: 'custom-map-pin',
@@ -337,6 +358,20 @@
                 iconSize: [24, 30],
                 iconAnchor: [12, 30],
                 popupAnchor: [0, -28]
+            });
+        }
+
+        function createSchoolPin() {
+            return L.divIcon({
+                className: 'school-map-pin',
+                html: `
+                    <div style="background:#059669; color:#fff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,0.25); font-size:11px;">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                `,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12],
+                popupAnchor: [0, -12]
             });
         }
 
@@ -357,10 +392,10 @@
             const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                       Math.sin(dLon/2) * Math.sin(dLon/2);
-            return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(1);
+            return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toFixed(2);
         }
 
-        // 1. LOAD POLIGON BATAS ADMINISTRASI
+        // 1. LOAD POLIGON BATAS ADMINISTRASI KOTA BOGOR (OUTER BOUNDARY)
         const pathAdmin = [
             'data/bogor_administrasi.geojson',
             'bogor_administrasi.geojson',
@@ -370,20 +405,21 @@
         function muatBatasAdministrasi(idx = 0) {
             if (idx >= pathAdmin.length) return;
             fetch(pathAdmin[idx])
-                .then(res => {
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    return res.json();
-                })
+                .then(res => res.json())
                 .then(data => {
+                    rawAdminData = data;
                     if (adminBoundaryLayer) map.removeLayer(adminBoundaryLayer);
+
+                    // Garis Luar Pembatas Wilayah Kota Bogor
                     adminBoundaryLayer = L.geoJSON(data, {
-                        style: {
-                            color: '#ec4899',
-                            weight: 3,
-                            opacity: 0.9,
-                            fillColor: '#f472b6',
-                            fillOpacity: 0.08,
-                            dashArray: '6, 6'
+                        style: function() {
+                            return {
+                                color: '#1e293b',       // Garis hitam pekat pembatas kota
+                                weight: 3.5,            // Garis tebal memisahkan dari Kabupaten sekitar
+                                opacity: 0.9,
+                                fillColor: '#38bdf8',
+                                fillOpacity: 0.04
+                            };
                         },
                         interactive: false
                     }).addTo(map);
@@ -391,48 +427,60 @@
                 })
                 .catch(() => muatBatasAdministrasi(idx + 1));
         }
-
         muatBatasAdministrasi();
 
-        // 2. DETEKSI LOKASI RIIL PENGGUNA (GPS)
-        function deteksiLokasiPengguna() {
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        userLocation = [pos.coords.latitude, pos.coords.longitude];
+        // 2. FUNGSI UNTUK HIGHLIGHT POLIGON DENGAN LINE BIRU (KECAMATAN / KELURAHAN)
+        function updateHighlightPoligon(kecamatan, kelurahan) {
+            highlightBoundaryLayer.clearLayers();
+            if (!rawAdminData || !rawAdminData.features) return;
 
-                        if (userMarker) {
-                            userMarker.setLatLng(userLocation);
-                        } else {
-                            userMarker = L.circleMarker(userLocation, {
-                                radius: 8,
-                                fillColor: '#2563eb',
-                                color: '#ffffff',
-                                weight: 2.5,
-                                fillOpacity: 1
-                            }).addTo(map).bindPopup("<b>Lokasi Anda Saat Ini</b>");
-                        }
+            if (kecamatan === 'Semua' && kelurahan === 'Semua') {
+                if (adminBoundaryLayer) {
+                    map.fitBounds(adminBoundaryLayer.getBounds(), { padding: [20, 20] });
+                }
+                return;
+            }
 
-                        filterSemuaData();
+            const matchingFeatures = rawAdminData.features.filter(f => {
+                const p = f.properties || {};
+                const fKec = (p.WADMKC || p.KECAMATAN || p.kecamatan || p.Kecamatan || p.NAMOBJ || '').trim().toLowerCase();
+                const fKel = (p.WADMKD || p.KELURAHAN || p.kelurahan || p.Kelurahan || p.DESA || p.desa || '').trim().toLowerCase();
+
+                const matchKec = (kecamatan === 'Semua') || fKec.includes(kecamatan.toLowerCase());
+                const matchKel = (kelurahan === 'Semua') || fKel.includes(kelurahan.toLowerCase());
+
+                if (kelurahan !== 'Semua') return matchKel;
+                if (kecamatan !== 'Semua') return matchKec;
+                return false;
+            });
+
+            if (matchingFeatures.length > 0) {
+                const highlightGeoJson = L.geoJSON({
+                    type: "FeatureCollection",
+                    features: matchingFeatures
+                }, {
+                    style: {
+                        color: '#0284c7',        // Garis tepi biru tegas
+                        weight: 4,              // Garis tepi tebal
+                        opacity: 1,
+                        fillColor: '#38bdf8',    // Warna isian biru muda
+                        fillOpacity: 0.25,      // Arsiran poligon
+                        dashArray: '4, 4'
                     },
-                    (err) => {
-                        console.warn("Izin GPS tidak diberikan:", err.message);
-                        if (!userMarker) {
-                            userMarker = L.circleMarker(userLocation, {
-                                radius: 7,
-                                fillColor: '#2563eb',
-                                color: '#ffffff',
-                                weight: 2,
-                                fillOpacity: 0.95
-                            }).addTo(map).bindPopup("<b>Titik Referensi (Default)</b>");
-                        }
-                    },
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                );
+                    interactive: false
+                });
+
+                highlightBoundaryLayer.addLayer(highlightGeoJson);
+                highlightGeoJson.bringToFront();
+
+                map.fitBounds(highlightGeoJson.getBounds(), {
+                    padding: [40, 40],
+                    maxZoom: 16,
+                    animate: true,
+                    duration: 1.2
+                });
             }
         }
-
-        deteksiLokasiPengguna();
 
         // 3. LOAD DATA UMKM
         function loadDataUMKM() {
@@ -444,12 +492,8 @@
 
             function cobaAmbil(idx) {
                 if (idx >= filePaths.length) return;
-
                 fetch(filePaths[idx])
-                    .then(response => {
-                        if (!response.ok) throw new Error("HTTP " + response.status);
-                        return response.json();
-                    })
+                    .then(r => r.json())
                     .then(geojsonData => {
                         rawUmkmData = geojsonData.features || [];
                         populateKelurahanOptions(rawUmkmData);
@@ -457,18 +501,98 @@
                     })
                     .catch(() => cobaAmbil(idx + 1));
             }
-
             cobaAmbil(0);
         }
-
         loadDataUMKM();
 
+        // 4. LOAD DATASET PENDUKUNG
+        function muatLayerPendukung() {
+            fetch('data/sekolah_kota.geojson')
+                .then(r => r.json())
+                .then(data => {
+                    sekolahData = data.features || [];
+                    sekolahLayer.clearLayers();
+                    data.features.forEach(f => {
+                        if (!f.geometry || !f.geometry.coordinates) return;
+                        const coords = f.geometry.coordinates;
+                        const p = f.properties || {};
+                        const namaSekolah = p.nama || p.nama_sekolah || p.name || 'Fasilitas Pendidikan / Kampus';
+                        const jenjang = p.tingkat || p.jenjang || p.kategori || 'Sekolah / Kampus';
+
+                        const marker = L.marker([coords[1], coords[0]], { icon: createSchoolPin() });
+                        marker.bindPopup(`
+                            <div style="font-size:12px; padding:2px;">
+                                <div style="font-size:10px; font-weight:800; color:#059669; text-transform:uppercase;">
+                                    <i class="fa-solid fa-graduation-cap"></i> ${jenjang}
+                                </div>
+                                <div style="font-weight:700; color:#0f172a; margin-top:2px;">${namaSekolah}</div>
+                                <div style="font-size:10px; color:#64748b; margin-top:2px;">Potensi Pasar Pelajar/Mahasiswa</div>
+                            </div>
+                        `);
+                        sekolahLayer.addLayer(marker);
+                    });
+                }).catch(() => {});
+
+            fetch('data/pemukiman.geojson')
+                .then(r => r.json())
+                .then(data => {
+                    permukimanData = data.features || [];
+                    L.geoJSON(data, {
+                        style: { color: '#ca8a04', weight: 1, fillOpacity: 0.15 }
+                    }).addTo(permukimanLayer);
+                }).catch(() => {});
+
+            fetch('data/jalan_kota.geojson')
+                .then(r => r.json())
+                .then(data => {
+                    jalanData = data.features || [];
+                    L.geoJSON(data, {
+                        style: { color: '#64748b', weight: 2, opacity: 0.7 }
+                    }).addTo(jalanLayer);
+                }).catch(() => {});
+        }
+        muatLayerPendukung();
+
+        // 5. DETEKSI LOKASI PENGGUNA
+        function deteksiLokasiPengguna() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userLocation = [pos.coords.latitude, pos.coords.longitude];
+                        if (userMarker) userMarker.setLatLng(userLocation);
+                        else {
+                            userMarker = L.circleMarker(userLocation, {
+                                radius: 8, fillColor: '#2563eb', color: '#ffffff', weight: 2.5, fillOpacity: 1
+                            }).addTo(map).bindPopup("<b>Lokasi Anda Saat Ini</b>");
+                        }
+                        if (activePOV === 'pengunjung') filterSemuaData();
+                    },
+                    () => {
+                        if (!userMarker) {
+                            userMarker = L.circleMarker(userLocation, {
+                                radius: 7, fillColor: '#2563eb', color: '#ffffff', weight: 2, fillOpacity: 0.95
+                            }).addTo(map).bindPopup("<b>Titik Acuan (Kota Bogor)</b>");
+                        }
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            }
+        }
+        deteksiLokasiPengguna();
+
         function populateKelurahanOptions(features) {
+            const kecTerpilih = (document.getElementById('kecamatanSelect').value || 'Semua').toLowerCase();
             const kelSet = new Set();
+
             features.forEach(f => {
-                const k = (f.properties || {}).kelurahan || (f.properties || {}).desa;
-                if (k) kelSet.add(k.trim());
+                const p = f.properties || {};
+                const k = p.kelurahan || p.desa;
+                const kc = (p.kecamatan || '').toLowerCase();
+                if (k && (kecTerpilih === 'semua' || kc.includes(kecTerpilih))) {
+                    kelSet.add(k.trim());
+                }
             });
+
             const sel = document.getElementById('kelurahanSelect');
             sel.innerHTML = '<option value="Semua">Semua Kelurahan</option>';
             Array.from(kelSet).sort().forEach(kel => {
@@ -476,6 +600,38 @@
                 opt.value = kel; opt.textContent = kel;
                 sel.appendChild(opt);
             });
+        }
+
+        function onKecamatanChange() {
+            const kecKey = document.getElementById('kecamatanSelect').value;
+            const kelKey = 'Semua';
+            document.getElementById('kelurahanSelect').value = 'Semua';
+            populateKelurahanOptions(rawUmkmData);
+
+            updateHighlightPoligon(kecKey, kelKey);
+
+            if (activePOV === 'pengunjung') {
+                filterSemuaData();
+            } else {
+                bersihkanAnalisisSpasial();
+                renderMarkers();
+            }
+            renderStatistik();
+        }
+
+        function onKelurahanChange() {
+            const kecKey = document.getElementById('kecamatanSelect').value;
+            const kelKey = document.getElementById('kelurahanSelect').value;
+
+            updateHighlightPoligon(kecKey, kelKey);
+
+            if (activePOV === 'pengunjung') {
+                filterSemuaData();
+            } else {
+                bersihkanAnalisisSpasial();
+                renderMarkers();
+            }
+            renderStatistik();
         }
 
         function pilihKategori(kat, el) {
@@ -490,7 +646,47 @@
             filterSemuaData();
         }
 
+        function gantiModePOV(mode) {
+            activePOV = mode;
+            document.getElementById('tabModePengunjung').classList.toggle('active', mode === 'pengunjung');
+            document.getElementById('tabModePengusaha').classList.toggle('active', mode === 'pengusaha');
+
+            bersihkanAnalisisSpasial();
+            if (routePolyline) hapusRuteNavigasi();
+
+            const searchBox = document.getElementById('searchBoxContainer');
+            const catPills = document.getElementById('categoryPillGroup');
+            const radiusSel = document.getElementById('radiusSelect');
+
+            if (mode === 'pengusaha') {
+                searchBox.style.display = 'none';
+                radiusSel.style.display = 'none';
+                catPills.style.display = 'none';
+
+                document.getElementById('layerSekolah').checked = true;
+                map.addLayer(sekolahLayer);
+
+                renderMarkers();
+                renderModePengusahaIntro();
+            } else {
+                searchBox.style.display = 'flex';
+                radiusSel.style.display = 'inline-block';
+                catPills.style.display = 'flex';
+
+                renderMarkers();
+                renderListView();
+            }
+        }
+
+        function bersihkanAnalisisSpasial() {
+            if (analisisBufferLayer) { map.removeLayer(analisisBufferLayer); analisisBufferLayer = null; }
+            if (candidateMarker) { map.removeLayer(candidateMarker); candidateMarker = null; }
+            competitorMarkersGroup.clearLayers();
+        }
+
         function filterSemuaData() {
+            if (activePOV !== 'pengunjung') return;
+
             const searchKey = (document.getElementById('mainSearchInput').value || '').toLowerCase().trim();
             const kecKey = (document.getElementById('kecamatanSelect').value || 'Semua').trim();
             const kelKey = (document.getElementById('kelurahanSelect').value || 'Semua').trim();
@@ -499,12 +695,13 @@
             filteredUmkmData = rawUmkmData.filter(feature => {
                 const props = feature.properties || {};
                 const nama = (props.nama_umkm || props.nama || '').toLowerCase();
+                const desc = (props.deskripsi_produk || props.deskripsi || '').toLowerCase();
                 const kec = (props.kecamatan || '').trim().toLowerCase();
                 const kel = (props.kelurahan || props.desa || '').trim().toLowerCase();
                 const kat = (props.kategori || '').trim().toLowerCase();
                 const coords = feature.geometry ? feature.geometry.coordinates : null;
 
-                const matchNama = !searchKey || nama.includes(searchKey) || kel.includes(searchKey) || kec.includes(searchKey);
+                const matchNama = !searchKey || nama.includes(searchKey) || desc.includes(searchKey) || kel.includes(searchKey);
                 const matchKec = (kecKey === 'Semua') || kec.includes(kecKey.toLowerCase());
                 const matchKel = (kelKey === 'Semua') || kel.includes(kelKey.toLowerCase());
                 const matchKat = (activeKategori === 'Semua') || kat.includes(activeKategori.toLowerCase());
@@ -518,10 +715,6 @@
                 return matchNama && matchKec && matchKel && matchKat && matchRadius;
             });
 
-            if (kecKey !== 'Semua' && pusatKecamatan[kecKey]) {
-                map.flyTo(pusatKecamatan[kecKey], 14, { duration: 1.2 });
-            }
-
             filteredUmkmData.forEach(f => {
                 if (f.geometry && f.geometry.coordinates) {
                     f.distanceToUser = hitungJarakKm(userLocation[0], userLocation[1], f.geometry.coordinates[1], f.geometry.coordinates[0]);
@@ -533,12 +726,9 @@
 
             renderMarkers();
 
-            if (filteredUmkmData.length === 0) {
-                renderNoResultView();
-            } else {
-                renderListView();
-            }
-            
+            if (filteredUmkmData.length === 0) renderNoResultView();
+            else renderListView();
+
             renderStatistik();
         }
 
@@ -549,22 +739,244 @@
             }
 
             umkmLayerGroup.clearLayers();
-            filteredUmkmData.forEach(item => {
+            const dataset = (activePOV === 'pengunjung') ? filteredUmkmData : rawUmkmData;
+
+            dataset.forEach(item => {
                 if (!item.geometry || !item.geometry.coordinates) return;
                 const coords = item.geometry.coordinates;
                 const props = item.properties || {};
-                const pinColor = getWarnaKategori(props.kategori);
-
                 const marker = L.marker([coords[1], coords[0]], {
-                    icon: createCustomPin(pinColor)
+                    icon: createCustomPin(getWarnaKategori(props.kategori))
                 });
-
                 marker.on('click', () => {
-                    renderDetailView(item);
+                    if (activePOV === 'pengunjung') renderDetailView(item);
                 });
-
                 umkmLayerGroup.addLayer(marker);
             });
+        }
+
+        // TAMPILAN PANEL MODE PENGUSAHA DENGAN RESTORE SEMUA TITIK
+        function renderModePengusahaIntro() {
+            bersihkanAnalisisSpasial();
+            renderMarkers(); // Kembalikan seluruh titik UMKM
+
+            const container = document.getElementById('leftCardBody');
+            container.innerHTML = `
+                <div style="background: #e0f2fe; border: 1px solid #bae6fd; padding: 12px; border-radius: 12px; color: #0369a1;">
+                    <div style="font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-store"></i> Analisis Peluang Usaha Baru
+                    </div>
+                    <div style="font-size: 11px; margin-top: 4px; line-height: 1.4;">
+                        Tentukan rencana bisnis Anda di bawah, lalu <b>klik sembarang lokasi di peta</b> untuk mengevaluasi persaingan dan target pasar.
+                    </div>
+                </div>
+
+                <div style="background: #ffffff; border: 1px solid var(--border-soft); border-radius: 12px; padding: 12px; display:flex; flex-direction:column; gap:10px;">
+                    <div>
+                        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">
+                            1. Kategori Usaha
+                        </div>
+                        <select id="kategoriRencanaUsaha" class="select-pill" style="width: 100%; border-radius: 8px; padding: 8px 10px;">
+                            <option value="Kuliner" selected>Kuliner (Makanan & Minuman)</option>
+                            <option value="Fashion">Fashion (Pakaian & Aksesori)</option>
+                            <option value="Jasa">Jasa & Servis</option>
+                            <option value="Kerajinan">Kerajinan Tangan & Souvenir</option>
+                            <option value="Teknologi">Teknologi & Digital</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">
+                            2. Produk Spesifik yang Ingin Dijual
+                        </div>
+                        <input type="text" id="produkRencanaUsaha" placeholder="Contoh: Dimsum, Nasi Goreng, Bakery, Kafe..." 
+                            style="width:100%; border:1px solid var(--border-soft); border-radius:8px; padding:8px 10px; font-size:11.5px; outline:none;">
+                        <div style="font-size:9.5px; color:#94a3b8; margin-top:3px;">Sistem akan mencari kompetitor dengan nama/produk yang serupa.</div>
+                    </div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; font-size: 11px; color: #475569; line-height: 1.5;">
+                    <i class="fa-solid fa-map-pin" style="color: #ea580c;"></i> <b>Panduan Analisis:</b>
+                    <ol style="margin-left: 18px; margin-top: 4px;">
+                        <li>Pilih wilayah di dropdown atas untuk melihat batas poligon biru kecamatan/kelurahan.</li>
+                        <li>Pastikan titik yang Anda klik berada di dalam batas garis biru tersebut.</li>
+                        <li>Sistem akan menyaring kompetitor sejenis dan sekolah terdekat.</li>
+                    </ol>
+                </div>
+            `;
+        }
+
+        map.on('click', (e) => {
+            if (activePOV !== 'pengusaha') return;
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+            jalankanAnalisisPeluangUsaha(lat, lng);
+        });
+
+        function jalankanAnalisisPeluangUsaha(lat, lng) {
+            const kategoriInput = document.getElementById('kategoriRencanaUsaha') 
+                ? document.getElementById('kategoriRencanaUsaha').value 
+                : 'Kuliner';
+            const produkInput = document.getElementById('produkRencanaUsaha') 
+                ? document.getElementById('produkRencanaUsaha').value.trim().toLowerCase() 
+                : '';
+
+            umkmLayerGroup.clearLayers();
+            competitorMarkersGroup.clearLayers();
+
+            if (candidateMarker) map.removeLayer(candidateMarker);
+            candidateMarker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'custom-cand-pin',
+                    html: `<div style="background:#0f172a; color:#fff; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-shadow:0 3px 10px rgba(0,0,0,0.3); font-size:14px;"><i class="fa-solid fa-shop"></i></div>`,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16]
+                })
+            }).addTo(map).bindPopup(`<b>Rencana Titik Usaha Baru</b><br>${produkInput ? 'Produk: ' + produkInput : 'Kategori: ' + kategoriInput}`).openPopup();
+
+            if (analisisBufferLayer) map.removeLayer(analisisBufferLayer);
+            analisisBufferLayer = L.circle([lat, lng], {
+                radius: 500,
+                color: '#3b82f6',
+                fillColor: '#60a5fa',
+                fillOpacity: 0.15,
+                weight: 2,
+                dashArray: '5, 5'
+            }).addTo(map);
+
+            map.panTo([lat, lng]);
+
+            let kompetitorDitemukan = [];
+            rawUmkmData.forEach(item => {
+                if (!item.geometry || !item.geometry.coordinates) return;
+                const coords = item.geometry.coordinates;
+                const p = item.properties || {};
+                const dist = hitungJarakKm(lat, lng, coords[1], coords[0]);
+
+                if (parseFloat(dist) <= 0.5) {
+                    const nama = (p.nama_umkm || p.nama || '').toLowerCase();
+                    const desc = (p.deskripsi_produk || p.deskripsi || '').toLowerCase();
+                    const kat = (p.kategori || '').toLowerCase();
+
+                    const matchKategori = kat.includes(kategoriInput.toLowerCase());
+                    const matchProduk = !produkInput || nama.includes(produkInput) || desc.includes(produkInput);
+
+                    if (matchKategori && matchProduk) {
+                        kompetitorDitemukan.push({
+                            nama: p.nama_umkm || p.nama,
+                            produk: p.deskripsi_produk || p.deskripsi || '-',
+                            jarak: (parseFloat(dist) * 1000).toFixed(0),
+                            coords: [coords[1], coords[0]]
+                        });
+
+                        const compMarker = L.marker([coords[1], coords[0]], {
+                            icon: createCustomPin('#dc2626')
+                        });
+                        compMarker.bindPopup(`
+                            <div style="font-size:11px;">
+                                <span style="background:#fee2e2; color:#b91c1c; font-weight:800; padding:2px 6px; border-radius:4px; font-size:9.5px;">KOMPETITOR</span>
+                                <div style="font-weight:700; color:#0f172a; margin-top:3px;">${p.nama_umkm || p.nama}</div>
+                                <div style="color:#64748b; font-size:10px;">${p.deskripsi_produk || p.deskripsi || '-'}</div>
+                                <div style="color:#dc2626; font-weight:700; margin-top:2px;">&plusmn; ${(parseFloat(dist) * 1000).toFixed(0)} meter dari rencana Anda</div>
+                            </div>
+                        `);
+                        competitorMarkersGroup.addLayer(compMarker);
+                    }
+                }
+            });
+
+            let sekolahTerdekat = null;
+            let minJarakSekolah = 999;
+            sekolahData.forEach(s => {
+                if (!s.geometry || !s.geometry.coordinates) return;
+                const coords = s.geometry.coordinates;
+                const dist = parseFloat(hitungJarakKm(lat, lng, coords[1], coords[0]));
+                if (dist < minJarakSekolah) {
+                    minJarakSekolah = dist;
+                    const p = s.properties || {};
+                    sekolahTerdekat = {
+                        nama: p.nama || p.nama_sekolah || p.name || 'Fasilitas Pendidikan',
+                        jarakM: (dist * 1000).toFixed(0)
+                    };
+                }
+            });
+
+            let skor = 50;
+            const jumlahComp = kompetitorDitemukan.length;
+
+            if (jumlahComp === 0) skor += 35;
+            else if (jumlahComp === 1) skor += 20;
+            else if (jumlahComp <= 3) skor += 5;
+            else skor -= 25;
+
+            if (minJarakSekolah < 0.4) skor += 15;
+            else if (minJarakSekolah < 1.0) skor += 10;
+
+            skor = Math.min(100, Math.max(10, skor));
+
+            let gradeWarna = '#16a34a';
+            let gradeLabel = 'Sangat Berpotensi';
+            if (skor < 50) { gradeWarna = '#dc2626'; gradeLabel = 'Kurang Disarankan'; }
+            else if (skor < 75) { gradeWarna = '#f59e0b'; gradeLabel = 'Potensi Sedang'; }
+
+            let listKompetitorHtml = '';
+            if (kompetitorDitemukan.length > 0) {
+                kompetitorDitemukan.forEach((k, idx) => {
+                    listKompetitorHtml += `
+                        <div class="competitor-list-item">
+                            <b>${idx + 1}. ${k.nama}</b> (${k.jarak} m)
+                            <div style="color:#64748b; font-size:10px;">${k.produk}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                listKompetitorHtml = `<div style="font-size:11px; color:#16a34a;"><i class="fa-solid fa-check"></i> Tidak ada kompetitor sejenis terdeteksi dalam radius 500 m.</div>`;
+            }
+
+            const container = document.getElementById('leftCardBody');
+            container.innerHTML = `
+                <div class="btn-back-link" onclick="renderModePengusahaIntro()">
+                    <i class="fa-solid fa-angle-left"></i> Ganti Analisis
+                </div>
+
+                <div style="display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid var(--border-soft); padding:12px; border-radius:12px;">
+                    <div>
+                        <div style="font-size:10px; font-weight:800; color:#94a3b8; text-transform:uppercase;">Skor Peluang Lokasi</div>
+                        <div style="font-size:16px; font-weight:800; color:${gradeWarna}; margin-top:2px;">${gradeLabel}</div>
+                    </div>
+                    <div class="score-badge" style="background:${gradeWarna};">${skor}%</div>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid var(--border-soft); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+                    <div style="font-size:11px; font-weight:800; color:#0f172a;">
+                        Target: ${kategoriInput} ${produkInput ? '(' + produkInput + ')' : ''}
+                    </div>
+
+                    <div style="font-size:11px; border-bottom:1px solid #f1f5f9; padding-bottom:6px;">
+                        <span style="color:#64748b;">Sekolah / Kampus Terdekat:</span><br>
+                        <b><i class="fa-solid fa-graduation-cap" style="color:#059669;"></i> ${sekolahTerdekat ? sekolahTerdekat.nama + ' (' + sekolahTerdekat.jarakM + ' m)' : 'Tidak terdata (< 1 km)'}</b>
+                    </div>
+
+                    <div style="font-size:11px;">
+                        <span style="color:#64748b;">Kompetitor dalam 500 m (${kompetitorDitemukan.length} toko):</span>
+                        <div style="max-height:120px; overflow-y:auto; margin-top:6px;">
+                            ${listKompetitorHtml}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:10px; font-size:10.5px; color:#475569; line-height:1.4;">
+                    <i class="fa-solid fa-lightbulb" style="color:#f59e0b;"></i> <b>Rekomendasi Sistem:</b><br>
+                    ${jumlahComp > 2 
+                        ? `Wilayah ini sudah memiliki <b>${jumlahComp} penjual ${produkInput || kategoriInput}</b>. Persaingan tinggi, pertimbangkan mencari ruko di jalan alternatif atau buat produk diferensiasi.` 
+                        : `Persaingan produk <b>${produkInput || kategoriInput}</b> di radius ini masih rendah. Peluang pasar sangat terbuka lebar.`}
+                </div>
+
+                <div class="detail-action-buttons">
+                    <button class="btn-orange-rute" onclick="renderModePengusahaIntro()">Pilih Titik Lain</button>
+                    <button class="btn-white-terdekat" onclick="gantiModePOV('pengunjung')">Mode Pengunjung</button>
+                </div>
+            `;
         }
 
         function renderListView() {
@@ -598,7 +1010,6 @@
                     </div>
                 `;
             });
-
             container.innerHTML = html;
         }
 
@@ -608,10 +1019,7 @@
             const coords = item.geometry.coordinates;
             const kat = props.kategori || 'Kuliner';
 
-            if (routePolyline) {
-                hapusRuteNavigasiTanpaList();
-            }
-
+            if (routePolyline) hapusRuteNavigasiTanpaList();
             map.flyTo([coords[1], coords[0]], 16);
 
             const container = document.getElementById('leftCardBody');
@@ -647,7 +1055,6 @@
             `;
         }
 
-        // FUNGSI ROUTING JALAN NYATA
         function buatRuteJalanNyata(item) {
             currentActiveItem = item;
             const props = item.properties || {};
@@ -687,31 +1094,22 @@
 
                     if (routePolyline) map.removeLayer(routePolyline);
                     routePolyline = L.polyline(coordsRoute, {
-                        color: '#dc2626',
-                        weight: 5,
-                        opacity: 0.9,
-                        lineJoin: 'round',
-                        lineCap: 'round'
+                        color: '#dc2626', weight: 5, opacity: 0.9, lineJoin: 'round', lineCap: 'round'
                     }).addTo(map);
 
                     map.fitBounds(routePolyline.getBounds(), { padding: [60, 60] });
                     tampilkanPanelRuteNavigasi();
                 })
-                .catch(err => {
-                    console.warn('OSRM gagal merespons, fallback ke jarak langsung:', err);
+                .catch(() => {
                     buatGarisLurusFallback(startLat, startLng, destLat, destLng, item);
                 });
         }
 
         function hitungDurasiMenit(jarakKm, mode) {
             let durasi = 0;
-            if (mode === 'motor') {
-                durasi = Math.ceil((jarakKm / 30) * 60) + 1;
-            } else if (mode === 'mobil') {
-                durasi = Math.ceil((jarakKm / 22) * 60) + 2;
-            } else if (mode === 'jalan') {
-                durasi = Math.ceil((jarakKm / 4.8) * 60);
-            }
+            if (mode === 'motor') durasi = Math.ceil((jarakKm / 30) * 60) + 1;
+            else if (mode === 'mobil') durasi = Math.ceil((jarakKm / 22) * 60) + 2;
+            else if (mode === 'jalan') durasi = Math.ceil((jarakKm / 4.8) * 60);
             return Math.max(1, durasi);
         }
 
@@ -733,7 +1131,7 @@
                 <div style="background:#ffffff; border:1px solid #f1ece1; border-radius:10px; padding:10px; display:flex; flex-direction:column; gap:8px;">
                     <div style="font-size:11px; display:flex; align-items:center; gap:8px;">
                         <span style="width:9px; height:9px; border-radius:50%; background:#2563eb; display:inline-block;"></span>
-                        <span><b>Titik awal:</b> Lokasi Anda (titik biru)</span>
+                        <span><b>Titik awal:</b> Lokasi Anda</span>
                     </div>
                     <div style="font-size:11px; display:flex; align-items:center; gap:8px;">
                         <span style="width:9px; height:9px; border-radius:50%; background:#dc2626; display:inline-block;"></span>
@@ -774,20 +1172,13 @@
             tampilkanPanelRuteNavigasi();
         }
 
-        // FUNGSI MEMULAI NAVIGASI AKTIF LANGSUNG DI DALAM RINTIK WEBGIS (IN-APP)
         function mulaiNavigasiRute() {
             if (!currentActiveItem) return;
-
             const props = currentActiveItem.properties || {};
             const durasiMnt = hitungDurasiMenit(currentRouteDistanceKm, activeTransportMode);
 
-            // 1. Zoom kamera peta mendekat ke lokasi pengguna
-            map.flyTo(userLocation, 18, {
-                animate: true,
-                duration: 1.5
-            });
+            map.flyTo(userLocation, 18, { animate: true, duration: 1.5 });
 
-            // 2. Ubah tampilan panel samping menjadi Tampilan Navigasi Aktif (In-App)
             const container = document.getElementById('leftCardBody');
             container.innerHTML = `
                 <div style="background: #16a34a; color: #ffffff; padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
@@ -809,11 +1200,6 @@
                     </div>
                 </div>
 
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px; font-size: 11px; color: #475569;">
-                    <i class="fa-solid fa-circle-info" style="color: #2563eb;"></i> 
-                    Ikuti jalur garis merah di peta menuju lokasi tujuan Anda.
-                </div>
-
                 <div class="detail-action-buttons" style="margin-top: 10px;">
                     <button class="btn-orange-rute" style="background: #dc2626;" onclick="akhiriNavigasi()">
                         <i class="fa-solid fa-circle-stop"></i> Akhiri Navigasi
@@ -821,23 +1207,19 @@
                 </div>
             `;
 
-            // 3. Pantau koordinat pengguna secara langsung
             if ("geolocation" in navigator) {
                 navigationInterval = navigator.geolocation.watchPosition(
                     (pos) => {
                         userLocation = [pos.coords.latitude, pos.coords.longitude];
-                        if (userMarker) {
-                            userMarker.setLatLng(userLocation);
-                        }
+                        if (userMarker) userMarker.setLatLng(userLocation);
                         map.panTo(userLocation);
                     },
-                    (err) => console.warn("GPS Tracking:", err),
+                    (err) => console.warn(err),
                     { enableHighAccuracy: true }
                 );
             }
         }
 
-        // FUNGSI MENGAKHIRI / KELUAR DARI NAVIGASI AKTIF
         function akhiriNavigasi() {
             if (navigationInterval) {
                 navigator.geolocation.clearWatch(navigationInterval);
@@ -861,14 +1243,8 @@
                 navigator.geolocation.clearWatch(navigationInterval);
                 navigationInterval = null;
             }
-            if (routePolyline) {
-                map.removeLayer(routePolyline);
-                routePolyline = null;
-            }
-            if (singleTargetMarker) {
-                map.removeLayer(singleTargetMarker);
-                singleTargetMarker = null;
-            }
+            if (routePolyline) { map.removeLayer(routePolyline); routePolyline = null; }
+            if (singleTargetMarker) { map.removeLayer(singleTargetMarker); singleTargetMarker = null; }
             currentActiveItem = null;
             renderMarkers();
             renderListView();
@@ -879,14 +1255,8 @@
                 navigator.geolocation.clearWatch(navigationInterval);
                 navigationInterval = null;
             }
-            if (routePolyline) {
-                map.removeLayer(routePolyline);
-                routePolyline = null;
-            }
-            if (singleTargetMarker) {
-                map.removeLayer(singleTargetMarker);
-                singleTargetMarker = null;
-            }
+            if (routePolyline) { map.removeLayer(routePolyline); routePolyline = null; }
+            if (singleTargetMarker) { map.removeLayer(singleTargetMarker); singleTargetMarker = null; }
             renderMarkers();
         }
 
@@ -900,7 +1270,7 @@
             container.innerHTML = `
                 <div class="no-result-box">
                     <div class="no-result-title">Tidak ada UMKM yang sesuai</div>
-                    <div class="no-result-sub">Coba kata kunci lain, atau ubah filter kecamatan/kategori.</div>
+                    <div class="no-result-sub">Coba kata kunci lain atau ubah filter wilayah.</div>
                     <button class="btn-reset-search" onclick="resetPencarian()">Hapus pencarian</button>
                 </div>
             `;
@@ -913,23 +1283,24 @@
             document.getElementById('radiusSelect').value = '0';
             activeKategori = 'Semua';
             document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+            highlightBoundaryLayer.clearLayers();
             filterSemuaData();
         }
 
         function renderStatistik() {
-            const total = filteredUmkmData.length;
+            const total = (activePOV === 'pengunjung') ? filteredUmkmData.length : rawUmkmData.length;
             const kec = document.getElementById('kecamatanSelect').value;
             
             document.getElementById('statSelectedTotal').innerText = total;
             document.getElementById('statAreaName').innerText = (kec === 'Semua') ? 'Kota Bogor' : kec;
 
             const katCounts = { 'Kuliner': 0, 'Jasa': 0, 'Fashion': 0, 'Teknologi': 0, 'Kerajinan': 0 };
-            filteredUmkmData.forEach(f => {
+            const dataset = (activePOV === 'pengunjung') ? filteredUmkmData : rawUmkmData;
+
+            dataset.forEach(f => {
                 const k = ((f.properties || {}).kategori || '').toLowerCase();
                 for (let key in katCounts) {
-                    if (k.includes(key.toLowerCase())) {
-                        katCounts[key]++;
-                    }
+                    if (k.includes(key.toLowerCase())) katCounts[key]++;
                 }
             });
 
@@ -963,8 +1334,22 @@
                 if (document.getElementById('layerUmkm').checked) map.addLayer(umkmLayerGroup);
                 else map.removeLayer(umkmLayerGroup);
             } else if (layerName === 'admin' && adminBoundaryLayer) {
-                if (document.getElementById('layerAdmin').checked) map.addLayer(adminBoundaryLayer);
-                else map.removeLayer(adminBoundaryLayer);
+                if (document.getElementById('layerAdmin').checked) {
+                    map.addLayer(adminBoundaryLayer);
+                    map.addLayer(highlightBoundaryLayer);
+                } else {
+                    map.removeLayer(adminBoundaryLayer);
+                    map.removeLayer(highlightBoundaryLayer);
+                }
+            } else if (layerName === 'jalan') {
+                if (document.getElementById('layerJalan').checked) map.addLayer(jalanLayer);
+                else map.removeLayer(jalanLayer);
+            } else if (layerName === 'sekolah') {
+                if (document.getElementById('layerSekolah').checked) map.addLayer(sekolahLayer);
+                else map.removeLayer(sekolahLayer);
+            } else if (layerName === 'permukiman') {
+                if (document.getElementById('layerPermukiman').checked) map.addLayer(permukimanLayer);
+                else map.removeLayer(permukimanLayer);
             }
         }
     </script>
